@@ -4,8 +4,8 @@ import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import {login, logout} from './store/slices/authSlice'
-import Header from '@/components/Header/page'
-import Footer from '@/components/Footer/Footer'
+import Header from '@/components/header/page'
+import Footer from '@/components/footer/page'
 
 
 export default function Home() {
