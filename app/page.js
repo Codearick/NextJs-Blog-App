@@ -4,8 +4,8 @@ import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import {login, logout} from './store/slices/authSlice'
-import Header from '@/components/header/page'
-import Footer from '@/components/footer/page'
+import Header from '@/components/header/Header'
+import Footer from '@/components/footer/Footer'
 
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
     <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
       <div className='w-full block'>
       <Header/>
-        <main>
+        <main className="min-h-[100%]">
          TODO: 
         </main>
       <Footer />
