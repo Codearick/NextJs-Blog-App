@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+"use client"
+
+import React from 'react'
 import authService from '@/app/appwrite/auth'
 import { login } from '@/app/store/slices/authSlice'
 import { useDispatch } from 'react-redux'
@@ -18,12 +20,12 @@ const Signup = () => {
   } = useForm();
 
   const signupHandler = async (data) => {
-    setError(" ");
+    setError("");
     try {
       const userData = await authService.createAccount(data);
       if (userData) {
-        const userData = await authService.getCurrentUser();
-        if (userData) {
+        const currentUserData = await authService.getCurrentUser();
+        if (currentUserData) {
           dispatch(login(userData))
           router.push("/");
         }
@@ -49,8 +51,8 @@ const Signup = () => {
             >Sign Up</div>
           </Link>
         </p>
-        {errors && <p className='text-red-600 mt-8 text-center'>{errors}</p>}
-        <form action="POST" onSubmit={handleSubmit(signupHandler)}>
+        {errors && <div className='text-red-600 mt-8 text-center'>{errors}</div>}
+        <form method='post' onSubmit={handleSubmit(signupHandler)}>
           <div className='space-y-5'>
             <Input
               type="email"
