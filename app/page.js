@@ -4,8 +4,6 @@ import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import {login, logout} from './store/slices/authSlice'
-import Header from '@/components/header/Header'
-import Footer from '@/components/footer/Footer'
 
 
 export default function Home() {
@@ -26,13 +24,11 @@ export default function Home() {
   }, [])
   
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
+    <div className='min-h-[80vh] flex flex-wrap content-between bg-gray-400'>
       <div className='w-full block'>
-      <Header/>
-        <main className="min-h-[100%]">
+        <main>
          TODO: 
         </main>
-      <Footer />
       </div>
     </div>
   ) : null
