@@ -1,15 +1,15 @@
 import React, { useId } from 'react'
 
 const Select = ({
-    options,
     label,
+    options,
     className = " ",
     ...props
 }, ref) => {
     const id = useId();
     return (
         <div className='w-full'>
-            {label && <label htmlFor={id} className={className}></label>}
+            {label && <label htmlFor={id} className={className}>{label}</label>}
             <select
                 id={id}
                 ref={ref}
