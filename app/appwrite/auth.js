@@ -1,5 +1,5 @@
 import { Client, Account, ID } from "appwrite";
-import Config from "../config/config";
+import Config from "../config/Config";
 
 class AuthService {
     client = new Client();
