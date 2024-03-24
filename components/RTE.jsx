@@ -13,6 +13,7 @@ const RTE = ({ name, control, label, defaultValue = " ", }) => {
         control={control}
         render={({ field: { onChange } }) => (
           <Editor
+            apiKey='8vorsmtmq3f15f3t9847fjlzy007lkypi8oawse7dqzpz808'
             initialValue={defaultValue}
             init={{
               height: 500,
@@ -40,7 +41,7 @@ const RTE = ({ name, control, label, defaultValue = " ", }) => {
                 "anchor",
               ],
               toolbar: "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
-    
+
               content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
             }}
             onEditorChange={onChange}
