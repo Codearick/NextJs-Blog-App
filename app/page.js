@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import appWriteService from '@/app/appwrite/appwriteConfig'
+import authService from './appwrite/auth'
 import { Container, PostCard } from "@/components/index"
 import Link from 'next/link'
 
 const page = () => {
     const [posts, setPosts] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         appWriteService.getPosts().then(posts => {
@@ -14,9 +16,12 @@ const page = () => {
                 setPosts(posts.documents);
             }
         })
+        authService.getCurrentUser().then(user => {
+            if(user)setIsLoggedIn(true)
+        })
     }, [])
 
-    if (posts.length === 0) {
+    if (isLoggedIn === false) {
         return (
             <div className="w-full min-h-[90vh] py-8 mt-4 text-center">
                 <Container>
@@ -36,7 +41,7 @@ const page = () => {
     }
 
     return (
-        <div className='w-full py-8'>
+        <div className='w-full min-h-[90vh] py-8'>
             <Container>
                 <div className='flex flex-wrap'>
                     {posts.map(post => (
