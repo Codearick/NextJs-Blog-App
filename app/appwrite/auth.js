@@ -1,6 +1,7 @@
 import { Client, Account, ID } from "appwrite";
 import Config from "../config/Config";
 
+
 class AuthService {
     client = new Client();
     account;
@@ -41,7 +42,7 @@ class AuthService {
         } catch (error) {
             console.log("Appwrite service :: getCurrentUser :: error is ",error.message);
         }
-        return null;
+        return false;
     }
 
     async logout() {
