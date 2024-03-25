@@ -5,21 +5,21 @@ import Image from 'next/image'
 
 
 const PostCard = ({ $id, title, featuredImage }) => {
+    const img = Service.getFilePreview(featuredImage);
     return (
-        <Link href={`/post/${$id}`}>
+        <Link href={`/blog/${$id}`}>
             <div className='w-full bg-gray-100 rounded-lg p-4'>
-                <div className="w-full justify-center mb-4">
+                <div className="relative w-full h-auto justify-center mb-4">
                 <Image
                     className='rounded-lg'
                     fill={true}
                     objectFit='contain'
-                    src={Service.getFilePreview(featuredImage)}
+                    src={img}
                     alt={title}
-                    loading='lazy'
-                    placeholder="blur"
+                    priority
                 />
                 </div>
-                <h2 className='font-bold text-xl'>{title}</h2>
+                <h2 className='font-bold text-xl text-black'>{title}</h2>
             </div>
         </Link>
     )
