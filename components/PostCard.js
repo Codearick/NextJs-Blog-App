@@ -6,8 +6,9 @@ import Image from 'next/image'
 
 const PostCard = ({ $id, title, featuredImage }) => {
     const img = Service.getFilePreview(featuredImage);
+    const link = `/blog/${$id}`
     return (
-        <Link href={`/blog/${$id}`}>
+        <Link >
             <div className='w-full bg-gray-100 rounded-lg p-4'>
                 <div className="relative w-full h-auto justify-center mb-4">
                 <Image
