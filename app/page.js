@@ -21,6 +21,7 @@ const page = () => {
         })
     }, [])
 
+
     if (isLoggedIn === false) {
         return (
             <div className="w-full min-h-[90vh] py-8 mt-4 text-center">
