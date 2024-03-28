@@ -1,26 +1,22 @@
 "use client"
 
-import React from 'react'
+import React, {useState} from 'react'
 import authService from '@/app/appwrite/auth'
 import { login } from '@/app/store/slices/authSlice'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Input, Logo, Button, } from './index'
+import { Input, Button, } from './index'
 
 const Signup = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm();
+  const [errors, setErrors] = useState("");
+  const { register, handleSubmit} = useForm();
 
   const signupHandler = async (data) => {
-    setError("");
+    setErrors("");
     try {
       const userData = await authService.createAccount(data);
       if (userData) {
@@ -31,72 +27,56 @@ const Signup = () => {
         }
       }
     } catch (error) {
-      setError(error.message)
+      setErrors(error.message)
     }
   }
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10'>
-        <div className="logo mb-2 flex justify-center">
-          <span className="inline-block w-full max-w-[100px]">
-            <Logo width="100%" />
-          </span>
-        </div>
-        <h2 className="text-center text-2xl font-bold leading-tight">Sign in to your account</h2>
-        <p className="mt-2 text-center text-base text-black/60">
-          Don&apos;t have any account?&nbsp;
-          <Link href="/signup">
-            <div className="font-medium text-primary transition-all duration-200 hover:underline"
-            >Sign Up</div>
+    <div className="min-h-[90vh] flex items-center justify-center">
+      <div className={`mx-auto my-5 w-full max-w-lg bg-slate-800 rounded-xl p-10 border border-white/30`}>
+        <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
+        <p className="my-3 text-center text-base text-white">
+          Already have an account?&nbsp;
+          <Link
+            href="/login"
+            className="font-medium text-blue-500 text-primary transition-all duration-200 hover:underline"
+          >
+            Sign In
           </Link>
         </p>
-        {errors && <div className='text-red-600 mt-8 text-center'>{errors}</div>}
-        <form method='post' onSubmit={handleSubmit(signupHandler)}>
+        {errors && <p className="text-red-600 mt-8 text-center">{errors}</p>}
+
+        <form onSubmit={handleSubmit(signupHandler)}>
           <div className='space-y-5'>
             <Input
-              type="email"
-              placeholder="Enter your email"
+              label="Full Name: "
+              placeholder="Enter your full name"
+              {...register("name", {
+                required: true,
+              })}
+            />
+            <Input
               label="Email: "
-              {
-              ...register("email", {
+              placeholder="Enter your email"
+              type="email"
+              {...register("email", {
                 required: true,
                 validate: {
-                  matchPattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                  message: "Enter correct email"
+                  matchPatern: (_,value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                    "Email address must be a valid address",
                 }
-              })
-              }
+              })}
             />
-            {errors.email && <div className='text-sm text-red-600'>{errors.email}</div>}
             <Input
-              label="Password"
+              label="Password: "
               type="password"
               placeholder="Enter your password"
-              {
-              ...register("password", {
-                validate: {
-                  matchPattern: /^(?=.*[A-Z]).{7,}$/,
-                  message: "Password length must be 7"
-                }
-              })
-              }
-            />
-            {errors.password && <div className='text-sm text-red-600'>{errors.password}</div>}
-            <Input
-              type="Username"
-              placeholder="Enter your full name"
-              label="Full Name: "
-              {
-              ...register("name", {
+              {...register("password", {
                 required: true,
-                minLength: { value: 5, message: "Minimum length must be 5" },
-                maxLength: { value: 12, message: "Maximum length must be 12" }
-              })
-              }
+              })}
             />
-            {errors.name && <div className='text-sm text-red-600'>{errors.name}</div>}
-            <Button type='submit' disabled={isSubmitting} className='w-full'>
+
+            <Button type="submit" className="w-full">
               Create Account
             </Button>
           </div>
@@ -104,10 +84,6 @@ const Signup = () => {
       </div>
     </div>
   )
-
 }
 
 export default Signup
-
-
-
