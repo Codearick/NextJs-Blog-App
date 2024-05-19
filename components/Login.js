@@ -22,12 +22,12 @@ const Login = () => {
     const onSubmitForm = async (data) => {
         setError(" ");
         try {
-            const session = authService.login(data);
+            const session = await authService.login(data);
             if (session) {
                 const userData = await authService.getCurrentUser();
                 if (userData) {
                     console.log("login component: ",userData)
-                    dispatch(authLogin(userData));
+                    dispatch(authLogin(userData)); // userdata not being stored in the redux.
                 }
                 router.push("/");
             }
