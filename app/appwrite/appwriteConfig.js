@@ -1,5 +1,5 @@
 import { Client, ID, Databases, Storage, Query } from "appwrite";
-import Config from "../config/Config";
+import Config from "../config/Config.js";
 
 
 class Service {
@@ -118,7 +118,7 @@ class Service {
         }
     }
 
-    async getFilePreview(fileId) {
+    getFilePreview(fileId) {
         return this.bucket.getFilePreview(
             fileId,
             Config.appwriteBucketId,
