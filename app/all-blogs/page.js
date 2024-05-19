@@ -7,12 +7,14 @@ import AuthLayout from '@/components/AuthLayout'
 
 function page() {
     const [posts, setPosts] = useState([])
-    useEffect(() => {}, [])
-    appwriteService.getPosts([]).then((posts) => {
-        if (posts) {
-            setPosts(posts.documents)
-        }
-    })
+    useEffect(() => {
+        appwriteService.getPosts([]).then((posts) => {
+            if (posts) {
+                setPosts(posts.documents)
+            }
+        }).catch((error) => console.log("Failed to get all posts from appwrite", error));
+    }, [])
+    
     return (
         <div className='min-h-[100vh]'>
             <AuthLayout authentication>
@@ -23,7 +25,7 @@ function page() {
                         {posts.length == 0 && <div className='text-xl text-white'>Oops! No Posts to show!</div>}
                             {posts.map((post) => (
                                 <div key={post.$id} className='p-2 w-1/4'>
-                                    <PostCard {...post} />
+                                    <PostCard post = {post} />
                                 </div>
                             ))}
                         </div>
