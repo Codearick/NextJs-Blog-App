@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 const Page = () => {
     const [posts, setPosts] = useState([]);
 
+    const userData = useSelector(state => state.auth.userData);
+    console.log("USERDATA :: ", userData);
     const authStatus = useSelector(state => state.auth.status);
 
     useEffect(() => {
