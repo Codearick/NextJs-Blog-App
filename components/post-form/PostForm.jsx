@@ -1,56 +1,60 @@
 'use client'
-import React, { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { Button, Input, RTE, Select } from '../index'
-import appWriteService from '@/app/appwrite/appwriteConfig'
-import { useRouter } from 'next/navigation'
-import { useSelector } from 'react-redux'
 
+import React, { useCallback, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button, Input, RTE, Select } from '../index';
+import appwriteService from '@/app/appwrite/appwriteConfig';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
-const page = ({ post }) => {
-    const { register, handleSubmit, watch, setValue,
-        control, getValues, formState: { isSubmitting } } = useForm({
-            defaultValues: {
-                title: post?.title || '',
-                slug: post?.$id || '',
-                content: post?.content || '',
-                status: post?.status || 'active'
-            }
-        });
+const Page = ({ post }) => {
+    const { register, handleSubmit, watch, setValue, control, getValues, formState: { isSubmitting } } = useForm({
+        defaultValues: {
+            title: post?.title || '',
+            slug: post?.$id || '',
+            content: post?.content || '',
+            status: post?.status || 'active'
+        }
+    });
     const router = useRouter();
-    const userData = useSelector((state) => state.auth.userData);
-    console.log("TEST this is userDATA: ",userData);
+    const userData = useSelector(state => state.auth.userData);
 
-    const submitHandler = async (data) => {
-        if (post) {
-            const file = data.image[0] ? await appWriteService.uploadFile(data.image[0]) : null;
-
-            if (file) {
-                appWriteService.deleteFile(post.featuredImage)
+    const submit = async (data) => {
+        try {
+            let file;
+            if (data.featuredImage && data.featuredImage.length > 0) {
+                file = await appwriteService.uploadFile(data.featuredImage[0]);
             }
-            const dbPost = await appWriteService.updatePost(
-                post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : undefined
-            })
 
-            if (dbPost) {
-                router.push(`/blog/${dbPost.$id}`);
-            }
-        } else {
-            const file = await appWriteService.uploadFile(data.image[0]);
-
-            if (file) {
-                const fileId = file.$id;
-                data.featuredImage = fileId;
-                const dbPost = await appWriteService.createPost({ ...data, userId : userData.$id })
-                // const dbPost = await appWriteService.createPost({ ...data })
+            if (post) {
+                if (file) {
+                    await appwriteService.deleteFile(post.featuredImage);
+                }
+                const dbPost = await appwriteService.updatePost(
+                    post.$id, {
+                        ...data,
+                        featuredImage: file ? file.$id : undefined, 
+                    }
+                );
                 if (dbPost) {
-                    router.push(`/blog/${dbPost.$id}`)
+                    router.push(`/blog/${dbPost.$id}`);
+                }
+            } else {
+                const file = data.featuredImage[0] ? await appwriteService.uploadFile(data.featuredImage[0]) : null
+;
+                
+                if (file) {
+                    data.featuredImage = file.$id;
+                    const dbPost = await appwriteService.createPost({ ...data, userId: userData.$id }); // problem in accessing userData from redux store.
+                    if (dbPost) {
+                        router.push(`/blog/${dbPost.$id}`);
+                    }
                 }
             }
+        } catch (error) {
+            console.error("Failed to submit the form: ", error);
         }
-    }
+    };
 
     const slugTransform = useCallback((value) => {
         if (value && typeof value === "string")
@@ -61,7 +65,7 @@ const page = ({ post }) => {
                 .replace(/\s/g, "-");
 
         return "";
-    }, [])
+    }, []);
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
@@ -70,11 +74,11 @@ const page = ({ post }) => {
             }
         });
 
-        return () => subscription.unsubscribe()
-    }, [watch, slugTransform, setValue])
+        return () => subscription.unsubscribe();
+    }, [watch, slugTransform, setValue]);
 
     return (
-        <form action="post" onSubmit={handleSubmit(submitHandler)} className='flex flex-wrap'>
+        <form onSubmit={handleSubmit(submit)} className='flex flex-wrap'>
             <div className="w-2/3 px-2">
                 <Input
                     label="Title :"
@@ -84,7 +88,7 @@ const page = ({ post }) => {
                 />
                 <Input
                     label="Slug :"
-                    placeholder="Slug(ignore)"
+                    placeholder="Slug (ignore)"
                     className="mb-4"
                     {...register("slug", {
                         required: true
@@ -100,15 +104,13 @@ const page = ({ post }) => {
                     label="Featured Image"
                     type="file"
                     className="mb-4"
-                    accept="image/png image/jpg image/gif image/jpeg image/heif"
-                    {
-                    ...register("image", { required: !post })
-                    }
+                    accept="image/png, image/jpg, image/gif, image/jpeg, image/heif"
+                    {...register("featuredImage", { required: !post })}
                 />
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={appWriteService.getFilePreview(post.featuredImage)}
+                            src={appwriteService.getFilePreview(post.featuredImage)}
                             alt={post.title}
                             className="rounded-lg"
                         />
@@ -120,12 +122,16 @@ const page = ({ post }) => {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button disabled={isSubmitting} type="submit" className={post ? "bg-green-500" : undefined +"w-full flex items-center justify-center"}>
+                <Button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className={`w-full flex items-center justify-center ${post ? "bg-green-500" : ""}`}
+                >
                     {post ? "Update" : "Submit"}
                 </Button>
             </div>
         </form>
     );
-}
+};
 
-export default page
+export default Page;
