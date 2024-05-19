@@ -44,24 +44,30 @@ const page = () => {
         <nav className='flex'>
           <div className='mr-4'>
             <Link href={"/"}>
-              <Logo  width="700px"/>
+              <Logo width="700px" />
             </Link>
           </div>
-        <ul className='flex ml-auto text-slate-300 text-lg font-[400]'>
-          {navItems.map((item) => 
-          item.active ? (
-            <li key={item.name}>
-              <button
-              onClick={() => router.push(item.slug)}
-              className='inline-block px-6 py-2 duration-200 hover:underline hover:text-white '
-              >{item.name}</button>
-            </li>
-          ) : (null)
-          )}
-          {
-            authStatus && (<li><LogoutBtn/></li>)
-          }
-        </ul>
+          <div className="ml-auto flex items-center justify-between">
+            <ul className="flex sm:space-x-7 space-x-3 md:mr-2">
+              {navItems.map((item) =>
+                item.active ? (
+                  <li key={item.name}
+                  >
+                    <button
+                      onClick={() => router.push(item.slug)}
+                      className={`inline-block px-5 py-2 text-lg duration-200 ${router.pathname === item.slug ? 'underline hover:text-white' : 'hover:underline hover:text-white text-text'}`}
+                    >{item.name}
+                    </button>
+                  </li>
+                ) : null
+              )}
+            </ul>
+            {authStatus && (
+              <li className="list-none rounded-full text-text md:hover:bg-accent hover:text-background">
+                <LogoutBtn />
+              </li>
+            )}
+          </div>
         </nav>
       </Container>
     </header>
