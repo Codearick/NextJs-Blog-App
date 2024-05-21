@@ -1,11 +1,12 @@
 import React from 'react'
-import Service from '@/app/appwrite/appwriteConfig'
+import appwriteService from '@/app/appwrite/appwriteConfig'
 import Link from 'next/link'
 import Image from 'next/image'
 
 
 const PostCard = ({ post }) => {
-    const img = Service.getFilePreview(post.featuredImage);
+    const img = appwriteService.getFilePreview(post.featuredImage);
+    console.log("THIS IS IMG :: ", img.href)
     const link = `/blog/${post.$id}`
     const date = new Date(post.$createdAt).toLocaleDateString('en-US');
     return (
@@ -14,11 +15,10 @@ const PostCard = ({ post }) => {
                 <div className="relative w-full h-64 mb-4">
                     <Image
                         className='rounded-lg'
-                        src={img}
-                        alt={post.title}
-                        layout='fill'
-                        objectFit='contain'
-                        priority
+                        src={`${img}`}
+                        alt={`${post.title}`}
+                        width={700}
+                        height={700}
                     />
                 </div>
 
