@@ -14,6 +14,7 @@ import Signup from "./Signup";
 import Login from "./Login";
 import PostForm from './post-form/PostForm'
 import AuthLayout from './AuthLayout'
+import Skeleton from "./Skeleton";
 
 export {
     Header,
@@ -30,4 +31,5 @@ export {
     Login,
     PostForm,
     AuthLayout,
+    Skeleton
 }
