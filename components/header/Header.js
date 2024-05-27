@@ -62,7 +62,7 @@ const page = () => {
                 ) : null
               )}
             </ul>
-            {authStatus &&  (
+            { (
               <li className="list-none rounded-full text-text md:hover:bg-accent hover:text-background">
                 <LogoutBtn />
               </li>
