@@ -119,10 +119,15 @@ class Service {
     }
 
     getFilePreview(fileId) {
-        return this.bucket.getFilePreview(
-            fileId,
-            Config.appwriteBucketId,
-        )
+        try {
+            return this.bucket.getFilePreview(
+                Config.appwriteBucketId,
+                fileId,
+            )
+        } catch (error) {
+            console.log("Appwrite Service :: getFilePreview :: error", error);
+            return false;
+        }
     }
 }
 
