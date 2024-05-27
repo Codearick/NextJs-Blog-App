@@ -1,39 +1,35 @@
 "use client"
 
-import React, { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import authService from '@/app/appwrite/auth'
-import { Input, Button } from './index'
-import { login as authLogin } from '@/app/store/slices/authSlice.js'
-import { useDispatch } from 'react-redux'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import authService from '@/app/appwrite/auth';
+import { Input, Button } from './index';
+import { login as authLogin } from '@/app/store/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    const {
-        register,
-        handleSubmit,
-        formState: { isSubmitting },
-    } = useForm()
+    const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm();
     const [error, setError] = useState("");
 
     const onSubmitForm = async (data) => {
-        setError(" ");
+        setError("");
         try {
             const session = await authService.login(data);
             console.log("SESSION :: ", session);
             if (session) {
                 const userData = await authService.getCurrentUser();
                 if (userData) {
-                    console.log("login component: ",userData)
-                    dispatch(authLogin(userData)); // userdata not being stored in the redux.
+                    console.log("login component: ", userData);
+                    dispatch(authLogin(userData));
                 }
                 router.push("/");
             }
-        } catch (error) {
-            setError(error.message)
+        } catch (err) {
+            setError(err.message);
         }
     }
 
@@ -42,7 +38,7 @@ const Login = () => {
             <div className='mx-auto w-full max-w-lg bg-slate-800 rounded-xl p-10 border border-white/30'>
                 <h2 className="text-center text-2xl font-bold leading-tight">Login to your account</h2>
                 <p className="mt-2 text-center text-base text-white">
-                    Don&apos;t have any account?&nbsp;
+                    Don&apos;t have an account?&nbsp;
                     <Link
                         href="/signup"
                         className="font-medium text-blue-600 text-primary transition-all duration-200 hover:underline"
@@ -57,29 +53,31 @@ const Login = () => {
                             label="Email"
                             placeholder="Enter your email"
                             type="email"
-                            {
-                            ...register("email", {
-                                required: true,
-                                validate: {
-                                    matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                        "Email address must be a valid address",
+                            {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                    message: "Email address must be a valid address"
                                 }
                             })}
                         />
-                        {error.length > 1 ? <div className='text-red-600'>{error}</div> : null}
+                        {errors.email && <div className='text-red-600'>{errors.email.message}</div>}
                         <Input
                             label="Password:"
                             type="password"
                             placeholder="Enter your password"
                             {...register("password", {
-                                required: true,
+                                required: "Password is required",
                             })}
                         />
+                        {errors.password && <div className='text-red-600'>{errors.password.message}</div>}
                         <Button
                             disabled={isSubmitting}
                             type="submit"
                             className="w-full flex items-center justify-center"
-                        >{isSubmitting ? "Submitting!" : "Sign in"}</Button>
+                        >
+                            {isSubmitting ? "Submitting..." : "Sign in"}
+                        </Button>
                     </div>
                 </form>
             </div>
@@ -87,4 +85,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login;
