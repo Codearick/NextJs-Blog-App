@@ -1,14 +1,15 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
-import { Link, useRouter, useParams } from "next/navigation";
-import appwriteService from "../../appwrite/appwriteConfig";
+import { useRouter, useParams } from "next/navigation";
+import appwriteService from "@/app/appwrite/appwriteConfig";
 import { Button, Container } from "@/components/index";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Post() {
+function Post() {
     const [post, setPost] = useState(null);
 
     const { slug } = useParams();
@@ -36,24 +37,33 @@ export default function Post() {
         });
     };
 
+    if (!post) {
+        return (
+            <div className='h-[70vh] flex justify-center items-center'>
+                <Container/>
+            </div>
+        )
+    }
+
     return post ? (
         <div className="py-8 min-h-[100vh]">
             <Container>
                 <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
             
-                    <div className="PreviewImage relative w-full h-auto p-2">
+                    <div className="PreviewImage relative w-full h-15 p-2">
                         <Image
-                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            src={appwriteService.getFilePreview(post.featuredImage).href}
                             alt={post.title}
-                            className="rounded-xl"
-                            fill
-                            loading="lazy"
+                            className="rounded-xl h-auto"
+                            width={500}
+                            height={500}
+                            layout=""
                         />
                     </div>
 
                     {isAuthor && (
                         <div className="absolute right-6 top-6">
-                            <Link href={`/editpost/${post.$id}`}>
+                            <Link href={`/Editpost/${post.$id}`}>
                                 <Button className="mr-3 bg-green-500">
                                     Edit
                                 </Button>
@@ -74,3 +84,5 @@ export default function Post() {
         </div>
     ) : null;
 }
+
+export default Post;
