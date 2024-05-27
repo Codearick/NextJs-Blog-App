@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react'
 import {Container, PostForm} from '@/components/index'
 import appWriteService from '@/app/appwrite/appwriteConfig'
 import { useRouter, useParams } from 'next/navigation';
-import AuthLayout from '@/components/index';
+import AuthLayout from '@/components/AuthLayout';
 
 const page = () => {
     const [post, setPost] = useState([])
