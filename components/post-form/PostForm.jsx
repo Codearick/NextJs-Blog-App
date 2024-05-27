@@ -127,6 +127,7 @@ const Page = ({ post }) => {
                     type="submit"
                     className={`w-full flex items-center justify-center ${post ? "bg-green-500" : ""}`}
                 >
+                    {isSubmitting ? "Submitting..." : " "}
                     {post ? "Update" : "Submit"}
                 </Button>
             </div>
