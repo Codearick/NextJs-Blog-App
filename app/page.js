@@ -5,6 +5,7 @@ import appWriteService from '@/app/appwrite/appwriteConfig';
 import { Container, PostCard } from "@/components/index";
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
+import { Skeleton } from '@/components/index';
 
 const Page = () => {
     const [posts, setPosts] = useState([]);
@@ -23,10 +24,18 @@ const Page = () => {
             .catch(error => console.error("Failed to get all posts from Appwrite", error));
     }, []);
 
-    if (posts.length === 0 || authStatus === false) {
+    if (posts.length === 0 && authStatus) {
+        return (
+            <div className='h-[70vh] flex justify-center items-center'>
+            <Skeleton/>
+            </div>
+        )
+    }
+
+    if ( authStatus === false ||  posts.length === 0 ) {
         return (
             <div className="w-full min-h-[90vh] py-8 mt-4 text-center">
-                <Container>
+                <Container >
                     <div className="flex items-center justify-center my-auto">
                         <div className="p-2 w-full">
                             <h1 className="text-2xl font-bold hover:text-gray-500">
@@ -42,19 +51,10 @@ const Page = () => {
         );
     }
 
-    if (posts.length === 0 && authStatus) {
-        return (
-            <div className='h-[70vh] flex justify-center items-center'>
-                <Container />
-            </div>
-        )
-    }
-console.log("POSTS ARE ::", posts)
     return (
         <div className="w-full min-h-[90vh] py-8">
             <Container>
                 <div className='flex flex-wrap'>
-                    {posts.length == 0 && <div className='text-xl text-white'>Oops! No Posts to show!</div>}
                     {posts.map((post) => (
                         <div key={post.$id} className='p-2 w-1/4'>
                             <PostCard post={post} />
